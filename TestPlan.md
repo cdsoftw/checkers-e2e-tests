@@ -27,14 +27,13 @@ For the purposes of this interview, I intend to focus on the simplest rules and 
 * Make valid move; players alternate turns
   - Board state updates
   - Opponent moves automatically
-  - "Make a move" message afterwards
+  - "Please wait" message (clicking during opponent's turn)
+  - "Make a move" afterwards
 * Cannot make invalid move
   - "Move diagonally only" message
     + When trying to move vertically/horizontally
   - "This is an invalid move"
     + Only when trying 3+ squares diagonally
-* "Please wait" message
-  - When clicking during opponent's turn
 * Can't move piece backwards
 * Can't move into occupied square
   - Applies to square containing either color
@@ -45,11 +44,20 @@ For the purposes of this interview, I intend to focus on the simplest rules and 
 
 ## Further Thoughts
 
+### Black-box vs. White-box testing
+In most cases, an SDET / Test Automation engineer has visibility and/or access to the AUT code, making white-box testing possible. If that were the case here, I would suggest implementing rudimentary state loading functionality via a string containing the current board state, similar to [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) in chess. This could then be [invoked via JavaScript](https://playwright.dev/docs/api/class-locator#locator-evaluate) within a test, opening up a variety of new possibilities for testing unique situations, actions, and win/loss conditions that would otherwise be too complex to set up. Some examples:
+* Capture multiple pieces
+  - Different combinations of left/right jumps
+* Promote piece to king
+  - Piece can then move both forwards + backwards
+* Victory
+  - Capture/block all opponent's pieces
+* Defeat
+  - No pieces left
+  - No legal moves
+
 ### Continuous Integration
 If time allowed or this was a full project, I would also set up a GitHub Actions workflow using Playwright's provided [testing containers](https://playwright.dev/docs/ci#via-containers), setting them to run on an appropriate cadence with some kind of reporting mechanism (e.g., DataDog/Slack integration, [publishing HTML report](https://playwright.dev/docs/ci-intro#publishing-report-on-the-web), etc.).
-
-### Black-box vs. White-box testing
-TODO
 
 ### Test Reliability
 In general, E2E automation often has a reputation for being flaky or unreliable. However, there are several strategies that can help mitigate this:
