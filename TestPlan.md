@@ -55,14 +55,14 @@ In most cases, an SDET / Test Automation engineer has visibility and/or access t
 ### Continuous Integration
 If time allowed or this was a full project, I would also create a GitHub Actions workflow using Playwright's provided [Docker containers](https://playwright.dev/docs/ci#via-containers), and set it to run on an appropriate cadence with some kind of reporting mechanism (e.g., DataDog/Slack integration, [publishing HTML report](https://playwright.dev/docs/ci-intro#publishing-report-on-the-web), etc.).
 
+### Visual regression testing
+While the implmentation is likely outside the scope of a technical interview, this particular AUT would be a great fit for Playwright's [visual comparison testing](https://playwright.dev/docs/test-snapshots), which uses screenshots and pixel matching to determine if there were any unexpected changes to the webpage or its behavior.
+
+### Test user actions *once*
+This plan solely covers UI-based browser automation tests, as there is no backend or API to speak of in the AUT. However, if there were, I would implement action-based testing that bypasses the UI whenever appropriate, using Playwright's [request fixture](https://playwright.dev/docs/api-testing#writing-tests). This helps maintain a good balance between [DRY and DAMP](https://stackoverflow.com/a/11837973) code, and would avoid slowdown and bloat caused by performing identical UI actions across multiple tests. Note that in cases where authentication is required, Playwright tests support loading [shared auth states](https://playwright.dev/docs/auth) via cookies and browser storage.
+
 ### Test Reliability
 In general, E2E automation often has a reputation for being flaky or unreliable. However, there are several strategies that can help mitigate this:
 * First and foremost, if a test cannot be written in a way that's reliable, then it should not be automated.
 * Page element locators must be chosen with careful regard to potential fragility. From most to least preferable, Playwright can locate UI elements via accessibility role and name, Test ID, label, CSS selectors, or visible text. Avoid the use of XPath or HTML tag names, and use any other HTML attribute with caution.
 * Whenever possible, utilize dynamic rather than explicit waits by waiting for changes in the DOM. A slow test is a bad test; we want to fail fast, and get feedback as quickly as possible.
-
-### Test user actions *once*
-This plan solely covers UI-based browser automation tests, as there is no backend or API to speak of in the AUT. However, if there were, I would implement action-based testing that bypasses the UI whenever appropriate, using Playwright's [request fixture](https://playwright.dev/docs/api-testing#writing-tests). This helps maintain a good balance between [DRY and DAMP](https://stackoverflow.com/questions/6453235/what-does-damp-not-dry-mean-when-talking-about-unit-tests) code, and would avoid slowdown and bloat caused by performing identical UI actions across multiple tests. Note that in cases where authentication is required, Playwright tests support loading [shared auth states](https://playwright.dev/docs/auth) via cookies and browser storage.
-
-### Visual regression testing
-While the implmentation is likely outside the scope of a technical interview, this particular AUT would be a great fit for Playwright's [visual comparison testing](https://playwright.dev/docs/test-snapshots), which uses screenshots and pixel matching to determine if there were any unexpected changes to the webpage or its behavior.
