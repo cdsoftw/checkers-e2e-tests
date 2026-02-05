@@ -4,16 +4,12 @@
 [Games for the Brain - Checkers](https://www.gamesforthebrain.com/game/checkers/)
 
 ## Tools and Techniques
-Tests will be written in Playwright for Node.js and TypeScript. This was chosen for its popularity in the testing domain and relatively painless setup process.
+Tests will be written in Playwright for Node.js and TypeScript. This was chosen for its popularity in the testing domain and relatively painless setup process. I also intend to follow the industry-standard [Page Object Model](https://playwright.dev/docs/pom) (POM), which will help with abstracting and simplifying interactions with the Checkers board and pieces.
 
-I also intend to follow the industry standard [Page Object Model](https://playwright.dev/docs/pom) (POM), which will help with abstracting and simplifying interactions with the Checkers board/pieces.
-
-"Arrange, act, assert" or "given, when, then" are good mnemonic templates for structuring individual test cases within each spec. Whenever possible and feasible, the Single Responsibility Principle should be followed, along with linting and code style enforcement. [Remember](https://martinfowler.com/articles/practical-test-pyramid.html), **test code is as important as production code.**
+"Arrange, act, assert" or "given, when, then" are good mnemonic templates for structuring individual test cases within each spec. Each test within a spec file should verify a single UI action, or at most a few related actions, similar to a unit test. Whenever possible and feasible, the Single Responsibility Principle should be followed, along with linting and code style enforcement. [Remember](https://martinfowler.com/articles/practical-test-pyramid.html), **test code is as important as production code.**
 
 ## Test Coverage and Goals
-Ideally, all game rules, potential actions, and win/loss states would be covered, but this is of course unrealistic within our constraints.
-
-For the purposes of this interview, I intend to focus on the simplest rules and actions of both the Checkers game and its webpage, including:
+Ideally, all game rules, potential actions, and win/loss states would be covered, but this is of course unrealistic within our constraints. For the purposes of this interview, I intend to focus on the simpler rules and actions of both the Checkers game and its webpage. Potential test cases include:
 * Page load
   - Pieces in starting positions
   - Expected HTML elements present
@@ -34,7 +30,7 @@ For the purposes of this interview, I intend to focus on the simplest rules and 
     + When trying to move vertically/horizontally
   - "This is an invalid move"
     + Only when trying 3+ squares diagonally
-* Can't move piece backwards
+  - Can't move piece backwards
 * Can't move into occupied square
   - Applies to square containing either color
 * Opponent captures a piece?
@@ -45,7 +41,7 @@ For the purposes of this interview, I intend to focus on the simplest rules and 
 ## Further Thoughts
 
 ### Black-box vs. White-box testing
-In most cases, an SDET / Test Automation engineer has visibility and/or access to the AUT code, making white-box testing possible. If that were the case here, I would suggest implementing rudimentary state loading functionality via a string containing the current board state, similar to [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) in chess. This could then be [invoked via JavaScript](https://playwright.dev/docs/api/class-locator#locator-evaluate) within a test, opening up a variety of new possibilities for testing unique situations, actions, and win/loss conditions that would otherwise be too complex to set up. Some examples:
+In most cases, an SDET / Test Automation engineer has visibility and/or access to the AUT code, making white-box testing possible. If that were the case here, I would suggest implementing rudimentary state loading functionality via a string containing current board state, similar to [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) in chess. This could then be [invoked via JavaScript](https://playwright.dev/docs/api/class-locator#locator-evaluate) within the test code, opening up a variety of new possibilities for testing unique situations, actions, and win/loss conditions - all of which would otherwise be too complex to set up. Some examples:
 * Capture multiple pieces
   - Different combinations of left/right jumps
 * Promote piece to king
@@ -57,12 +53,12 @@ In most cases, an SDET / Test Automation engineer has visibility and/or access t
   - No legal moves
 
 ### Continuous Integration
-If time allowed or this was a full project, I would also set up a GitHub Actions workflow using Playwright's provided [testing containers](https://playwright.dev/docs/ci#via-containers), setting them to run on an appropriate cadence with some kind of reporting mechanism (e.g., DataDog/Slack integration, [publishing HTML report](https://playwright.dev/docs/ci-intro#publishing-report-on-the-web), etc.).
+If time allowed or this was a full project, I would also create a GitHub Actions workflow using Playwright's provided [Docker containers](https://playwright.dev/docs/ci#via-containers), and set it to run on an appropriate cadence with some kind of reporting mechanism (e.g., DataDog/Slack integration, [publishing HTML report](https://playwright.dev/docs/ci-intro#publishing-report-on-the-web), etc.).
 
 ### Test Reliability
 In general, E2E automation often has a reputation for being flaky or unreliable. However, there are several strategies that can help mitigate this:
 * First and foremost, if a test cannot be written in a way that's reliable, then it should not be automated.
-* Page element locators must be chosen with careful regard to potential fragility. From most to least preferable, Playwright can locate UI elements via accessibility role and name, Test ID, label, CSS selectors, or visible text. Avoid the use of XPath or HTML tag names.
+* Page element locators must be chosen with careful regard to potential fragility. From most to least preferable, Playwright can locate UI elements via accessibility role and name, Test ID, label, CSS selectors, or visible text. Avoid the use of XPath or HTML tag names, and use any other HTML attribute with caution.
 * Whenever possible, utilize dynamic rather than explicit waits by waiting for changes in the DOM. A slow test is a bad test; we want to fail fast, and get feedback as quickly as possible.
 
 ### Test user actions *once*
