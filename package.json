@@ -18,6 +18,7 @@
   "homepage": "https://github.com/cdsoftw/checkers-e2e-tests#readme",
   "devDependencies": {
     "@playwright/test": "^1.58.1",
-    "@types/node": "^25.2.1"
+    "@types/node": "^25.2.1",
+    "prettier": "3.8.1"
   }
 }
