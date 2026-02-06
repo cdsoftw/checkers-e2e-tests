@@ -65,9 +65,7 @@ export class CheckersPage {
         row % 2 === 0 ? [1, 3, 5, 7] : [0, 2, 4, 6];
 
       for (const col of darkSquareCols) {
-        // don't need to await expected attribute - dark squares can't change
-        const imgSrc = await this.getImageAtCoordinates(col, row);
-        expect(imgSrc).toBe(this.darkSquareImgSrc);
+        await this.waitForImageAtCoordinates(col, row, this.darkSquareImgSrc);
       }
     }
   }
@@ -84,10 +82,14 @@ export class CheckersPage {
   }
 
   async goto() {
+    console.log('Navigating to Checkers page...');
+
     await this.page.goto(this.relativeUrl, {
       timeout: 15_000,
       waitUntil: 'domcontentloaded',
     });
+
+    console.log(`Current URL: ${this.page.url()}`);
   }
 
   /**
@@ -96,6 +98,8 @@ export class CheckersPage {
    * loaded and ready for interaction before proceeding with further tests.
    */
   async waitForPage() {
+    console.log('Waiting for Checkers page to load...');
+
     // wait for static elements
     await expect(this.checkersHeader).toBeVisible();
     await expect(this.restartLink).toBeVisible();
@@ -124,6 +128,7 @@ export class CheckersPage {
    * initial state described above, and that no pieces are currently selected.
    */
   async waitForInitialBoardState() {
+    console.log('Waiting for initial game board state...');
     await this.expectAllDarkSquaresAreEmpty();
 
     for (const row of [0, 1, 2]) {

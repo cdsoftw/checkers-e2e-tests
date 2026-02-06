@@ -5,9 +5,8 @@ test('visiting checkers page should load initial game state', async ({
   page,
 }) => {
   const checkersPage = new CheckersPage(page);
-  console.log('Navigating to checkers page...');
   await checkersPage.goto();
-  console.log('Page loaded, waiting for initial board state...');
   await checkersPage.waitForPage();
+  console.log('Page loaded.');
   await checkersPage.waitForInitialBoardState();
 });
