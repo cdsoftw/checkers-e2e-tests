@@ -4,6 +4,7 @@
 [Games for the Brain - Checkers](https://www.gamesforthebrain.com/game/checkers/)
 
 ## Tools and Techniques
+
 Tests will be written in Playwright for Node.js and TypeScript. This was chosen for its popularity in the testing domain and relatively painless setup process. I also intend to follow the industry-standard [Page Object Model](https://playwright.dev/docs/pom) (POM), which will help with abstracting and simplifying interactions with the Checkers board and pieces.
 
 "Arrange, act, assert" or "given, when, then" are good mnemonic templates for structuring individual test cases within each spec. Each test within a spec file should verify a single UI action, or at most a few related actions, similar to a unit test. Whenever possible and feasible, the Single Responsibility Principle should be followed, along with linting and code style enforcement. [Remember](https://martinfowler.com/articles/practical-test-pyramid.html), **test code is as important as production code.**
@@ -15,8 +16,9 @@ In general, E2E automation often has a reputation for being flaky or unreliable.
 * Whenever possible, utilize dynamic rather than explicit waits by waiting for changes in the DOM. A slow test is a bad test; we want to fail fast, and get feedback as quickly as possible.
 
 ## Test Coverage and Goals
+
 Ideally, all game rules, user actions, and game states would be covered, but this is of course unrealistic within our constraints. For the purposes of this interview, I intend to focus on the simpler rules and actions of both the Checkers game and its webpage, as more complex ones aren't feasible ([see below](#black-box-vs-white-box-testing)). Potential test cases include:
-* Page load
+* Page load ✅
   - Pieces in starting positions
   - Expected HTML elements present
 * Clicking links
@@ -24,8 +26,6 @@ Ideally, all game rules, user actions, and game states would be covered, but thi
     + Returns game to initial state
   - Rules
     + Navigates to expected URL
-* Cannot select opponent's (blue) piece
-  - No change to image
 * Make valid move; players alternate turns
   - Board state updates
   - Opponent moves automatically
@@ -37,6 +37,8 @@ Ideally, all game rules, user actions, and game states would be covered, but thi
   - "This is an invalid move"
     + Only when trying 3+ squares diagonally
   - Can't move piece backwards
+  - Cannot select opponent's (blue) piece
+    + No change to image
 * Can't move into occupied square
   - Applies to square containing either color
 * Opponent captures a piece?
@@ -67,5 +69,5 @@ While the implmentation is likely outside the scope of a technical interview, th
 ### Behavior-driven development (BDD)
 If the audience and/or stakeholders for these tests included non-technical team members, integrating with a BDD framework (e.g., [Playwright-BDD](https://vitalets.github.io/playwright-bdd/#/)) might be worthwhile. This would enable collaboration in plain text instead of code, increasing alignment and shared understanding despite differences in skillset. In addition, it would combine all the benefits of Playwright with the best parts of BDD tools like Cucumber, including full support for the Gherkin language.
 
-### Test user actions *once*
+### Test user actions _once_
 This plan solely covers UI-based browser automation tests, as there is no backend or API to speak of in the AUT. However, if there were, I would implement action-based testing that bypasses the UI whenever appropriate, using Playwright's [request fixture](https://playwright.dev/docs/api-testing#writing-tests). This helps maintain a good balance between [DRY and DAMP](https://stackoverflow.com/a/11837973) code, and would avoid slowdown and bloat caused by performing identical UI actions across multiple tests. Note that in cases where authentication is required, Playwright tests support loading [shared auth states](https://playwright.dev/docs/auth) via cookies and browser storage.
