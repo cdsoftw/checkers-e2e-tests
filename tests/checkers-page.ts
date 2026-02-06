@@ -196,14 +196,14 @@ export class CheckersPage {
       this.orangePieceImgSrc
     );
 
-    // and that ending square is empty
+    // and that ending square is empty + not dark
     await this.waitForImageAtCoordinates(
       endPos.col,
       endPos.row,
       this.lightSquareImgSrc
     );
 
-    // click square and wait for piece to be selected
+    // click initial square and wait for piece to be selected
     await this.clickSquareAtCoordinates(startPos.col, startPos.row);
     await this.waitForImageAtCoordinates(
       startPos.col,
@@ -216,8 +216,11 @@ export class CheckersPage {
     await this.waitForImageAtCoordinates(
       endPos.col,
       endPos.row,
-      this.orangePieceImgSrc
+      this.selectedOrangePieceImgSrc
     );
+
+    // not waiting for piece to be deselected because opponent moves
+    // immediately after, so they could capture it before the assertion
 
     // old square should now be empty
     await this.waitForImageAtCoordinates(
