@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 export class CheckersPage {
-  readonly relativeUrl: string = '/game/checkers';
   readonly page: Page;
+  private readonly relativeUrl: string = '/game/checkers';
 
   // constants
   readonly lightSquareImgSrc: string = 'gray.gif';
@@ -85,7 +85,7 @@ export class CheckersPage {
     }
   }
 
-  private async clickSquareAtCoordinates(col: number, row: number) {
+  async clickSquareAtCoordinates(col: number, row: number) {
     const squareLocator = this.gameBoardElement.locator(
       `css=[name="space${col}${row}"]`
     );
@@ -180,7 +180,7 @@ export class CheckersPage {
    * @param startPos object containing (col, row) coords of desired piece
    * @param endPos object containing (col, row) coords for the new location
    */
-  async movePiece(
+  async makeValidMove(
     startPos: { col: number; row: number },
     endPos: { col: number; row: number }
   ) {
@@ -223,6 +223,8 @@ export class CheckersPage {
     // immediately after, so they could capture it before the assertion
 
     // old square should now be empty
+    // TODO: might need to remove this - sometimes causes synchronization flake
+    // by being too late to find selected blue piece (move already completed)
     await this.waitForImageAtCoordinates(
       startPos.col,
       startPos.row,
@@ -235,12 +237,34 @@ export class CheckersPage {
    * selected version of the blue piece to both appear and disappear (takes
    * 1-2 seconds), and then for the regular piece to reappear. Finally, we
    * wait for the message text to signify that it's our turn.
-   * @param bluePieceCount the count of blue pieces after the previous move
+   * @param bluePieceCount the count of blue pieces after the previous move.
+   * Defaults to 12 (initial count).
    */
-  async waitForOpponentMove(bluePieceCount: number) {
+  async waitForOpponentMove(bluePieceCount: number = 12) {
     console.log('Waiting for opponent to move...');
-    // TODO
 
+    // opponent selects piece
+    // (only present for 1-2 seconds)
+    await expect(
+      this.getLocatorByImageSrc(this.selectedBluePieceImgSrc)
+    ).toBeVisible();
+
+    // move is complete when selected piece disappears
+    await expect(
+      this.getLocatorByImageSrc(this.selectedBluePieceImgSrc)
+    ).not.toBeVisible();
+
+    // count of regular blue pieces returns to expected value
+    await expect(this.getLocatorByImageSrc(this.bluePieceImgSrc)).toHaveCount(
+      bluePieceCount
+    );
+
+    // wait for message to signify that it's our turn again
+    await this.waitForMessageText('make a move');
+
+    // (somewhat) confirms opponent move was legal
     await this.expectAllDarkSquaresAreEmpty();
+
+    console.log('Opponent move is complete.');
   }
 }
