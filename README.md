@@ -6,3 +6,23 @@ This repository contains a detailed end-to-end test plan for a simple browser-ba
 ### [E2E Test Plan](./TestPlan.md)
 
 ###### Created for a technical interview at a leading defense startup.
+
+---
+
+### Running E2E tests
+After ensuring Node.js is installed, install Playwright and all dependencies with `npm ci`. Then install the latest Playwright browsers by running:
+```shell
+npx playwright install
+```
+
+After doing so, you can run tests via either the [VS Code extension](https://playwright.dev/docs/next/running-tests#run-tests-in-vs-code), or a variety of commands:
+* `npx playwright test`
+* `npx playwright test --ui`
+* `npx playwright test --headed`
+
+To specify browsers:
+```shell
+npx playwright test --project firefox --project [ANOTHER_BROWSER]
+```
+
+For more info, see the [Playwright docs](https://playwright.dev/docs/next/running-tests).
