@@ -30,17 +30,6 @@ export class CheckersPage {
     this.gameBoardElement = page.locator('#board');
   }
 
-  private async getImageAtCoordinates(
-    col: number,
-    row: number
-  ): Promise<string | null> {
-    const squareLocator = this.gameBoardElement.locator(
-      `css=[name="space${col}${row}"]`
-    );
-
-    return await squareLocator.getAttribute('src');
-  }
-
   private async waitForImageAtCoordinates(
     col: number,
     row: number,
@@ -90,6 +79,14 @@ export class CheckersPage {
     });
 
     console.log(`Current URL: ${this.page.url()}`);
+  }
+
+  private async clickSquareAtCoordinates(col: number, row: number) {
+    const squareLocator = this.gameBoardElement.locator(
+      `css=[name="space${col}${row}"]`
+    );
+
+    await squareLocator.click();
   }
 
   /**
@@ -151,5 +148,18 @@ export class CheckersPage {
         await this.waitForImageAtCoordinates(col, row, this.bluePieceImgSrc);
       }
     }
+  }
+
+  async movePiece(
+    startPos: { col: number; row: number },
+    endPos: { col: number; row: number }
+  ) {
+    console.log(
+      `Moving piece from space${startPos.col}${startPos.row} to ` +
+        `space${endPos.col}${endPos.row})...`
+    );
+
+    await this.clickSquareAtCoordinates(startPos.col, startPos.row);
+    await this.clickSquareAtCoordinates(endPos.col, endPos.row);
   }
 }
