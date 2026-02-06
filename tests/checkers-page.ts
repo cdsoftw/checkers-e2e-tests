@@ -218,4 +218,16 @@ export class CheckersPage {
       this.lightSquareImgSrc
     );
   }
+
+  /**
+   * Waits for the opponent's turn to complete - first, by waiting for the
+   * selected version of the blue piece to both appear and disappear (takes
+   * 1-2 seconds), and then for the regular piece to reappear. Finally, we
+   * wait for the message text to signify that it's our turn.
+   * @param bluePieceCount the count of blue pieces after our move
+   */
+  async waitForOpponentMove(bluePieceCount: number) {
+    console.log('Waiting for opponent to move...');
+    // TODO
+  }
 }
