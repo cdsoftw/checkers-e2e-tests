@@ -1,17 +1,18 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 export class CheckersPage {
+  readonly relativeUrl: string = '/game/checkers';
   readonly page: Page;
 
-  readonly relativeUrl: string = '/game/checkers';
-  readonly darkSquareImgSrc: string = 'black.gif';
+  // constants
   readonly lightSquareImgSrc: string = 'gray.gif';
+  readonly darkSquareImgSrc: string = 'black.gif';
   readonly orangePieceImgSrc: string = 'you1.gif';
   readonly selectedOrangePieceImgSrc: string = 'you2.gif';
   readonly bluePieceImgSrc: string = 'me1.gif';
   readonly selectedBluePieceImgSrc: string = 'me2.gif';
 
-  // element locators
+  // locators
   readonly checkersHeader: Locator;
   readonly messageElement: Locator;
   readonly restartLink: Locator;
@@ -21,12 +22,13 @@ export class CheckersPage {
   constructor(page: Page) {
     this.page = page;
 
-    // static elements
-    this.checkersHeader = page.getByRole('heading', { name: 'checkers' });
+    this.checkersHeader = page
+      .getByRole('heading')
+      .filter({ hasText: 'checkers' });
+
     this.messageElement = page.locator('#message');
     this.restartLink = page.getByRole('link', { name: 'restart' });
     this.rulesLink = page.getByRole('link', { name: 'rules' });
-
     this.gameBoardElement = page.locator('#board');
   }
 
@@ -40,6 +42,13 @@ export class CheckersPage {
     );
 
     await expect(squareLocator).toHaveAttribute('src', expectedSrc);
+  }
+
+  private async waitForMessageText(expectedText: string) {
+    await expect(this.messageElement).toBeVisible();
+    await expect(this.messageElement).toContainText(expectedText, {
+      ignoreCase: true,
+    });
   }
 
   /**
@@ -70,6 +79,14 @@ export class CheckersPage {
     }
   }
 
+  private async clickSquareAtCoordinates(col: number, row: number) {
+    const squareLocator = this.gameBoardElement.locator(
+      `css=[name="space${col}${row}"]`
+    );
+
+    await squareLocator.click();
+  }
+
   async goto() {
     console.log('Navigating to Checkers page...');
 
@@ -79,14 +96,6 @@ export class CheckersPage {
     });
 
     console.log(`Current URL: ${this.page.url()}`);
-  }
-
-  private async clickSquareAtCoordinates(col: number, row: number) {
-    const squareLocator = this.gameBoardElement.locator(
-      `css=[name="space${col}${row}"]`
-    );
-
-    await squareLocator.click();
   }
 
   /**
@@ -103,13 +112,16 @@ export class CheckersPage {
     await expect(this.rulesLink).toBeVisible();
 
     // wait for initial message
-    await expect(this.messageElement).toBeVisible();
-    await expect(this.messageElement).toContainText(
-      'select an orange piece to move',
-      { ignoreCase: true }
-    );
+    await this.waitForMessageText('select an orange piece to move');
 
+    // game board and piece counts
     await expect(this.gameBoardElement).toBeVisible();
+    await expect(
+      this.gameBoardElement.locator(`css=[src="${this.orangePieceImgSrc}"]`)
+    ).toHaveCount(12);
+    await expect(
+      this.gameBoardElement.locator(`css=[src="${this.bluePieceImgSrc}"]`)
+    ).toHaveCount(12);
   }
 
   /**
