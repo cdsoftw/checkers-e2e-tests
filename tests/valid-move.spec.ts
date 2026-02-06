@@ -1,4 +1,5 @@
-import { test } from '@playwright/test';
-import { CheckersPage } from './checkers-page';
+import { test, expect } from './checkersTest';
 
-// TODO
+// test('make valid move; players alternate turns', async ({ checkersPage }) => {
+//   TODO
+// });

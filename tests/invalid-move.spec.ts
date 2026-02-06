@@ -1,4 +1,3 @@
-import { test } from '@playwright/test';
-import { CheckersPage } from './checkers-page';
+import { test, expect } from './checkersTest';
 
 // TODO
