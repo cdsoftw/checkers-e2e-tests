@@ -1,0 +1,23 @@
+{
+  "name": "checkers-e2e-tests",
+  "version": "1.0.0",
+  "description": "This repository contains a detailed end-to-end test plan for a simple browser-based [checkers game](https://www.gamesforthebrain.com/game/checkers/). It also contains a skeleton test codebase in Playwright for Node.js and TypeScript, as well as a few test cases created within a 30-45 minute window.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cdsoftw/checkers-e2e-tests.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/cdsoftw/checkers-e2e-tests/issues"
+  },
+  "homepage": "https://github.com/cdsoftw/checkers-e2e-tests#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.1",
+    "@types/node": "^25.2.1"
+  }
+}
