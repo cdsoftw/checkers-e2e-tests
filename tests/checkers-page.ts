@@ -5,11 +5,11 @@ export class CheckersPage {
 
   readonly relativeUrl: string = '/game/checkers';
   readonly darkSquareImgSrc: string = 'black.gif';
-  readonly lightSquareImgSrc = 'gray.gif';
-  readonly orangePieceImgSrc = 'you1.gif';
-  readonly selectedOrangePieceImgSrc = 'you2.gif';
-  readonly bluePieceImgSrc = 'me1.gif';
-  readonly selectedBluePieceImgSrc = 'me2.gif';
+  readonly lightSquareImgSrc: string = 'gray.gif';
+  readonly orangePieceImgSrc: string = 'you1.gif';
+  readonly selectedOrangePieceImgSrc: string = 'you2.gif';
+  readonly bluePieceImgSrc: string = 'me1.gif';
+  readonly selectedBluePieceImgSrc: string = 'me2.gif';
 
   // element locators
   readonly checkersHeader: Locator;
