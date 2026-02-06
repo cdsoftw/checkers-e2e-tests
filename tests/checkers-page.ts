@@ -11,6 +11,7 @@ export class CheckersPage {
   readonly selectedOrangePieceImgSrc: string = 'you2.gif';
   readonly bluePieceImgSrc: string = 'me1.gif';
   readonly selectedBluePieceImgSrc: string = 'me2.gif';
+  readonly initialPieceCount: number = 12; // (for each color)
 
   // locators
   readonly checkersHeader: Locator;
@@ -122,10 +123,10 @@ export class CheckersPage {
     // game board and piece counts
     await expect(this.gameBoardElement).toBeVisible();
     await expect(this.getLocatorByImageSrc(this.orangePieceImgSrc)).toHaveCount(
-      12
+      this.initialPieceCount
     );
     await expect(this.getLocatorByImageSrc(this.bluePieceImgSrc)).toHaveCount(
-      12
+      this.initialPieceCount
     );
 
     // wait for initial message
@@ -240,7 +241,7 @@ export class CheckersPage {
    * @param bluePieceCount the count of blue pieces after the previous move.
    * Defaults to 12 (initial count).
    */
-  async waitForOpponentMove(bluePieceCount: number = 12) {
+  async waitForOpponentMove(bluePieceCount: number = this.initialPieceCount) {
     console.log('Waiting for opponent to move...');
 
     // opponent selects piece
