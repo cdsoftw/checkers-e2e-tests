@@ -172,6 +172,14 @@ export class CheckersPage {
     }
   }
 
+  /**
+   * Moves a piece from one square to another by clicking the appropriate
+   * squares in sequence and waiting for the expected changes to occur.
+   * This function assumes that the move being made is valid (i.e., it's
+   * the player's turn, the endPos is forwards + diagonal, etc.).
+   * @param startPos object containing (col, row) coords of desired piece
+   * @param endPos object containing (col, row) coords for the new location
+   */
   async movePiece(
     startPos: { col: number; row: number },
     endPos: { col: number; row: number }
@@ -229,5 +237,7 @@ export class CheckersPage {
   async waitForOpponentMove(bluePieceCount: number) {
     console.log('Waiting for opponent to move...');
     // TODO
+
+    await this.expectAllDarkSquaresAreEmpty();
   }
 }
