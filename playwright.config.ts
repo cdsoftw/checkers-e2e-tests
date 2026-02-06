@@ -23,9 +23,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
-  timeout: 90_000,
+  timeout: 180_000, // 3 min - UI mode / VS code can be very slow to start
   expect: {
-    timeout: 10_000,
+    timeout: 15_000,
   },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
