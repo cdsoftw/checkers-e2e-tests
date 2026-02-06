@@ -1,3 +1,3 @@
-import { test, expect } from './checkersTest';
+import { test, expect } from './checkers-test';
 
 // TODO
