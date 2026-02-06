@@ -32,6 +32,8 @@ export class CheckersPage {
     this.gameBoardElement = page.locator('#board');
   }
 
+  /** helper functions **/
+
   private async waitForImageAtCoordinates(
     col: number,
     row: number,
@@ -42,6 +44,10 @@ export class CheckersPage {
     );
 
     await expect(squareLocator).toHaveAttribute('src', expectedSrc);
+  }
+
+  private getLocatorByImageSrc(imageSrc: string): Locator {
+    return this.gameBoardElement.locator(`css=[src="${imageSrc}"]`);
   }
 
   private async waitForMessageText(expectedText: string) {
@@ -87,6 +93,8 @@ export class CheckersPage {
     await squareLocator.click();
   }
 
+  /** test methods **/
+
   async goto() {
     console.log('Navigating to Checkers page...');
 
@@ -111,17 +119,19 @@ export class CheckersPage {
     await expect(this.restartLink).toBeVisible();
     await expect(this.rulesLink).toBeVisible();
 
+    // game board and piece counts
+    await expect(this.gameBoardElement).toBeVisible();
+    await expect(this.getLocatorByImageSrc(this.orangePieceImgSrc)).toHaveCount(
+      12
+    );
+    await expect(this.getLocatorByImageSrc(this.bluePieceImgSrc)).toHaveCount(
+      12
+    );
+
     // wait for initial message
     await this.waitForMessageText('select an orange piece to move');
 
-    // game board and piece counts
-    await expect(this.gameBoardElement).toBeVisible();
-    await expect(
-      this.gameBoardElement.locator(`css=[src="${this.orangePieceImgSrc}"]`)
-    ).toHaveCount(12);
-    await expect(
-      this.gameBoardElement.locator(`css=[src="${this.bluePieceImgSrc}"]`)
-    ).toHaveCount(12);
+    console.log('Page loaded.');
   }
 
   /**
@@ -171,7 +181,41 @@ export class CheckersPage {
         `space${endPos.col}${endPos.row})...`
     );
 
+    // ensure starting square contains our piece
+    await this.waitForImageAtCoordinates(
+      startPos.col,
+      startPos.row,
+      this.orangePieceImgSrc
+    );
+
+    // and that ending square is empty
+    await this.waitForImageAtCoordinates(
+      endPos.col,
+      endPos.row,
+      this.lightSquareImgSrc
+    );
+
+    // click square and wait for piece to be selected
     await this.clickSquareAtCoordinates(startPos.col, startPos.row);
+    await this.waitForImageAtCoordinates(
+      startPos.col,
+      startPos.row,
+      this.selectedOrangePieceImgSrc
+    );
+
+    // click new square and wait for piece to move
     await this.clickSquareAtCoordinates(endPos.col, endPos.row);
+    await this.waitForImageAtCoordinates(
+      endPos.col,
+      endPos.row,
+      this.orangePieceImgSrc
+    );
+
+    // old square should now be empty
+    await this.waitForImageAtCoordinates(
+      startPos.col,
+      startPos.row,
+      this.lightSquareImgSrc
+    );
   }
 }
