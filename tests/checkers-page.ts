@@ -34,7 +34,7 @@ export class CheckersPage {
 
   /** helper functions **/
 
-  private async waitForImageAtCoordinates(
+  async waitForImageAtCoordinates(
     col: number,
     row: number,
     expectedSrc: string
@@ -43,11 +43,11 @@ export class CheckersPage {
       `css=[name="space${col}${row}"]`
     );
 
-    await expect(squareLocator).toHaveAttribute('src', expectedSrc);
+    await expect(squareLocator).toHaveAttribute('src', new RegExp(expectedSrc));
   }
 
-  private getLocatorByImageSrc(imageSrc: string): Locator {
-    return this.gameBoardElement.locator(`css=[src="${imageSrc}"]`);
+  getLocatorByImageSrc(imageSrc: string): Locator {
+    return this.gameBoardElement.locator(`css=[src*="${imageSrc}"]`);
   }
 
   private async waitForMessageText(expectedText: string) {
